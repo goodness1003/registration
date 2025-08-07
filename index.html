@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Registration Form</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <div class="content">
+    <header class="beginning">
+      <h3><span>&gt;---</span> Registration Form <span>---&lt;</span></h3>
+    </header>
+
+    <form action="#" method="POST">
+      <table>
+        <tr>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Other Name</th>
+        </tr>
+        <tr>
+          <td><input type="text" size="30" class="input" name="firstName" required /></td>
+          <td><input type="text" size="30" class="input" name="lastName" required /></td>
+          <td><input type="text" size="30" class="input" name="otherName" /></td>
+        </tr>
+      </table>
+
+      <div class="email">
+        <label for="email">Email Address: </label>
+        <input type="email" id="email" name="email" size="60" required />
+      </div>
+
+      <div class="dob">
+        <label for="dob">Date of Birth: </label>
+        <input type="date" id="dob" name="dob" required />
+      </div>
+
+      <div class="country">
+        <label for="country">Country: </label>
+        <select name="country" id="country" required>
+          <option value="">--Select Country--</option>
+          <option value="Afghanistan">Afghanistan</option>
+          <option value="Albania">Albania</option>
+          <option value="Algeria">Algeria</option>
+          <option value="Andorra">Andorra</option>
+          <option value="Angola">Angola</option>
+          <option value="Argentina">Argentina</option>
+          <option value="Armenia">Armenia</option>
+          <option value="Australia">Australia</option>
+          <option value="Austria">Austria</option>
+          <option value="Azerbaijan">Azerbaijan</option>
+          <!-- Add more as needed -->
+        </select>
+      </div>
+
+      <div class="file">
+        <label for="file">Upload File: </label>
+        <input type="file" id="file" name="file" />
+      </div>
+
+      <div class="profile">
+        <textarea name="bio" placeholder="Your profile / bio-data"></textarea>
+      </div>
+
+      <div class="password">
+        <p>
+          <label for="password">Password: </label>
+          <input type="password" id="password" name="password" required />
+        </p>
+        <br />
+        <p>
+          <label for="confirmPassword">Confirm Password: </label>
+          <input type="password" id="confirmPassword" class="input2" name="confirmPassword" required />
+        </p>
+      </div>
+
+      <br />
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+  <div id="output"></div>
+
+    <script>
+  document.querySelector("form").addEventListener("submit", function (e) {
+    e.preventDefault(); // Stop form submission
+
+    // Collect all fields
+    const firstName = document.querySelector('input[name="firstName"]');
+    const lastName = document.querySelector('input[name="lastName"]');
+    const otherName = document.querySelector('input[name="otherName"]');
+    const email = document.querySelector('input[name="email"]');
+    const dob = document.querySelector('input[name="dob"]');
+    const country = document.querySelector('select[name="country"]');
+    const file = document.querySelector('input[name="file"]');
+    const bio = document.querySelector('textarea[name="bio"]');
+    const password = document.querySelector('input[name="password"]');
+    const confirmPassword = document.querySelector('input[name="confirmPassword"]');
+    const output = document.getElementById('output');
+
+    // Clear previous errors
+    document.querySelectorAll('.error-message').forEach(el => el.remove());
+    output.innerHTML = ''; // Clear previous output
+
+    const showError = (field, message) => {
+      const error = document.createElement('div');
+      error.textContent = message;
+      error.className = 'error-message';
+      error.style.color = 'red';
+      error.style.fontSize = '14px';
+      error.style.marginTop = '5px';
+      field.parentNode.appendChild(error);
+      field.focus();
+    };
+
+    // Sequential Validation
+    if (firstName.value.trim() === '') {
+      showError(firstName, "First name is required.");
+      return;
+    }
+
+    if (lastName.value.trim() === '') {
+      showError(lastName, "Last name is required.");
+      return;
+    }
+
+    if (email.value.trim() === '') {
+      showError(email, "Email is required.");
+      return;
+    }
+
+    const emailPattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+    if (!emailPattern.test(email.value.trim())) {
+      showError(email, "Invalid email format.");
+      return;
+    }
+
+    if (dob.value.trim() === '') {
+      showError(dob, "Date of birth is required.");
+      return;
+    }
+
+    if (country.value === '') {
+      alert("Please select a country.");
+      country.focus();
+      return;
+    }
+
+    if (!file.files[0]) {
+      alert("Please upload a file.");
+      file.focus();
+      return;
+    }
+
+    if (bio.value.trim().length < 10) {
+      showError(bio, "Bio-data must be at least 10 characters.");
+      return;
+    }
+
+    if (password.value.trim().length < 6) {
+      showError(password, "Password must be at least 6 characters.");
+      return;
+    }
+
+    if (password.value !== confirmPassword.value) {
+      showError(confirmPassword, "Passwords do not match.");
+      return;
+    }
+
+    // ✅ HIGHLIGHT: SHOW SUBMITTED INFO BELOW FORM
+    const fileName = file.files[0].name;
+    output.innerHTML = `
+      <h3 style="color: lightseagreen;">Submitted Information</h3>
+      <p><strong>First Name:</strong> ${firstName.value}</p>
+      <p><strong>Last Name:</strong> ${lastName.value}</p>
+      <p><strong>Other Name:</strong> ${otherName.value || "N/A"}</p>
+      <p><strong>Email:</strong> ${email.value}</p>
+      <p><strong>Date of Birth:</strong> ${dob.value}</p>
+      <p><strong>Country:</strong> ${country.value}</p>
+      <p><strong>Uploaded File:</strong> ${fileName}</p>
+      <p><strong>Bio-data:</strong> ${bio.value}</p>
+    `;
+
+    // Optionally reset form if needed
+    // this.reset();
+  });
+</script>
+
+
+</body>
+</html>
